@@ -39,7 +39,37 @@ private:
     bool validateTime(const std::string& time) {
         return std::regex_match(time, std::regex(R"(\d{2}:\d{2})")); 
     }
+    // Function to save appointments to CSV file
+    void saveToCSV() {
+        std::ofstream file(filename, std::ios::app); // Opens file in append mode
+        for (const auto& appointment : appointments) {
+            // Writes each appointment's details as a comma-separated line in the CSV file
+            file << appointment.name << "," << appointment.date << "," << appointment.time << "," << appointment.description << "\n";
+        }
+    }
 
+    // Function to load appointments from CSV file
+    void loadFromCSV() {
+        std::ifstream file(filename); /g
+        std::string line;
+        while (std::getline(file, line)) {
+            std::istringstream s(line);
+            Appointment appointment;
+            std::string field;
+
+            std::getline(s, appointment.name, ','); 
+            std::getline(s, appointment.date, ','); 
+            std::getline(s, appointment.time, ','); 
+            std::getline(s, appointment.description, ','); 
+
+            appointments.push_back(appointment); 
+        }
+    }
+
+public:
+    AppointmentService() {
+        loadFromCSV(); 
+    }
     
 
     // Function to add a new appointment
